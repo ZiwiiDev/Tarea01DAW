@@ -88,6 +88,8 @@ Nos saldrá esto:
 
 Ahora vamos a instalar nuestro **Lubuntu**. Para ello, vamos al **VirtualBox** y le damos a **"Nueva"**, de nombre le ponemos **"Casa"**, seleccionamos la **.iso** de **Lubuntu** y le damos a **"Next"**, asignamos **2GB de RAM**, asignamos **10GB de memoria**. Ahora le asignamos a la MV resultante la **Red NAT** (debe ser la misma que tiene el **Servidor**), le asignamos **"RedNAT_Despliegue"**.
 
+![Asignar RedNAT_Despliegue a Casa](./img/v39_vbx.png)
+
 Lo ejecutamos, instalamos el sistema operativo. Le indicamos el lenguaje a **español**, borramos el **disco duro** con swap, insertamos todos los datos en los campos que nos piden con los requisitos de la actividad (**"carmen"** en todo):
 
 ![Rellenar campos de Casa](./img/v14_vbx.png)
@@ -108,23 +110,13 @@ wget google.es
 
 ![Conexión a internet con éxito](./img/v17_vbx.png)
 
-Ahora lo cerramos y vamos al VirtualBox. Vamos a Herramientas > Menú Desplegable > Red > Reenvío de Puertos. Estamos en el mismo sitio donde hemos creado la Red NAT.
-Aquí le damos a **"Crear"** y creamos el reenvío de puertos para Apache y SSH. Para ello insertamos los siguientes datos (nombre, protocolo, IP anfitrión, puerto anfitrión, IP invitado y puerto invitado):
-
-En nombre le asignamos el nombre, protocolo es el mismo en los dos, el IP anfitrión sería el localhost de nuestro pc, el puerto anfitrión de Apache es 8081 (porque el puerto 8080 está asignado) y para el SSH el puerto es el 2200 (le asignamos 2209 para referenciar nuestra MV), la IP invitado es la IP que tiene nuestra MV y el puerto invitado Apache tiene el 80 y SSH tiene el 22.
-
-Le damos a **"Aplicar"**.
-
-![Reenvío de puertos con Casa](./img/v18_vbx.png)
-
-Instalamos el **SSH** con:
-
+Comprobamos que se ha asignado la IP correctamente a nuestra Casa:
 ```bash
-sudo apt install openssh-server
-systemctl status ssh
+ip a
 ```
+Resultado:
 
-![Estado del SSH](./img/v19_vbx.png)
+![IP de Casa](./img/v40_vbx.png)
 
 # Linux Shell
 ___
@@ -140,11 +132,14 @@ Añade la regla en el cortafuegos para ``ssh``.
 
 >Recuerda usar systemctl.
 
-Y para instalar el SSH:
+Instalamos el **SSH** con:
 
 ```bash
 sudo apt install openssh-server
+systemctl status ssh
 ```
+
+![Estado del SSH](./img/v19_vbx.png)
 
 Comprobamos que tenemos Apache instalado y SSH (nos aparece la lista por lo tanto **ufw** está instalado) y añadimos la regla en el cortafuegos para **SSH**:
 
@@ -186,6 +181,17 @@ Resultado:
 
 ![SSH Activo](./img/v20_vbx.png)
 
+Ahora lo cerramos y vamos al VirtualBox. Vamos a Herramientas > Menú Desplegable > Red > Reenvío de Puertos. Estamos en el mismo sitio donde hemos creado la Red NAT.
+Aquí le damos a **"Crear"** y creamos el reenvío de puertos para Apache y SSH. Para ello insertamos los siguientes datos (nombre, protocolo, IP anfitrión, puerto anfitrión, IP invitado y puerto invitado):
+
+En nombre le asignamos el nombre, protocolo es el mismo en los dos, el IP anfitrión sería el localhost de nuestro pc, el puerto anfitrión de Apache es 8081 (porque el puerto 8080 está asignado) y para el SSH el puerto es el 2200 (le asignamos 2209 para referenciar nuestra MV), la IP invitado es la IP que tiene nuestra MV y el puerto invitado Apache tiene el 80 y SSH tiene el 22.
+
+Al ser **Casa** y no **Servidor** no necesita crear un reenvío de puerto para Apache.
+
+Le damos a **"Aplicar"**.
+
+![Reenvío de puertos con Casa](./img/v18_vbx.png)
+
 # SSH
 ___
 ## Conexión mediante usuario y contraseña
@@ -211,7 +217,7 @@ Para comprobar que estás en el servidor, crea un archivo de texto llamado ``cas
 
 Desconéctate del servidor.
 
-Comprobamos que **Servidor** es accesible mediante **SSH** desde el anfitrión. Para ello, vamos a nuestro equipo y abrimos **"cmd"** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando:
+Comprobamos que **Servidor** es accesible mediante **SSH** desde el anfitrión. Para ello, vamos a nuestro equipo y abrimos **"cmd"** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando (podemos poner localhost o 127.0.0.1):
 
 ```bash
 ssh sergio@127.0.0.1 -p 2208
@@ -238,7 +244,7 @@ exit
 
 ![Desconectar del Servidor"](./img/v24_vbx.png)
 
-Comprobamos que **Casa** es accesible mediante **SSH** desde el equipo anfitrión. Para ello, vamos a nuestro equipo y abrimos **cmd** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando:
+Comprobamos que **Casa** es accesible mediante **SSH** desde el equipo anfitrión. Para ello, vamos a nuestro equipo y abrimos **cmd** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando (podemos poner localhost o 127.0.0.1):
 
 ```bash
 ssh carmen@localhost -p 2209
@@ -377,13 +383,13 @@ sudo apt install apache2
 
 ![Instalar Apache](./img/v36_vbx.png)
 
-Comprobamos que el servicio de **apache2** está activo y en funcionamiento ejecutamos el siguiente comando y añadimos la regla en el cortafuegos para **Apache**:
+Comprobamos que el servicio de **apache2** está activo y en funcionamiento ejecutamos el siguiente comando:
 
 ```bash
 systemctl status apache2
 ```
 
-Resultado:
+Resultado añadiendo la regla en el cortafuegos para **Apache**:
 
 ![Apache Activo](./img/v37_vbx.png)
 
@@ -394,14 +400,16 @@ sudo ufw allow Apache
 
 ![Apache Activo](./img/v38_vbx.png)
 
-Ahora cerramos nuestro servidor y vamos al VirtualBox. Vamos a Herramientas > Menú Desplegable > Red > Reenvío de Puertos. Estamos en el mismo sitio donde hemos creado la Red NAT.
+Ahora lo cerramos y vamos al VirtualBox. Vamos a Herramientas > Menú Desplegable > Red > Reenvío de Puertos. Estamos en el mismo sitio donde hemos creado la Red NAT.
 Aquí le damos a **"Crear"** y creamos el reenvío de puertos para Apache y SSH. Para ello insertamos los siguientes datos (nombre, protocolo, IP anfitrión, puerto anfitrión, IP invitado y puerto invitado):
 
-En nombre le asignamos el nombre, protocolo es el mismo en los dos, el IP anfitrión sería el localhost de nuestro pc, el puerto anfitrión de Apache es 8080 (si tenemos otro servidor le asignamos el 8081 por ejemplo) y para el SSH el puerto es el 2200 (le asignamos 2208 para referenciar nuestra MV), la IP invitado es la IP que tiene nuestra MV y el puerto invitado Apache tiene el 80 y SSH tiene el 22.
+En nombre le asignamos el nombre, protocolo es el mismo en los dos, el IP anfitrión sería el localhost de nuestro pc, el puerto anfitrión de Apache es 8081 (porque el puerto 8080 está asignado) y para el SSH el puerto es el 2200 (le asignamos 2209 para referenciar nuestra MV), la IP invitado es la IP que tiene nuestra MV y el puerto invitado Apache tiene el 80 y SSH tiene el 22.
+
+Al ser **Casa** y no **Servidor** no necesita crear un reenvío de puerto para Apache.
 
 Le damos a **"Aplicar"**.
 
-![Reenvío de puertos con Servidor](./img/v11_vbx.png)
+![Reenvío de puertos con Casa](./img/v18_vbx.png)
 
 ### SCP
 Equipo **Casa**:
@@ -418,7 +426,7 @@ Crea en el equipo **Casa** una página web ``index.html`` como la siguiente con 
 </head>
 <body>
  <h1>Mi primer Servidor Apache</h1>
- <h2>NOMBRE Y APELLIDOS</h2>
+ <h2>Oliver Fabian Stetcu Stepanov</h2>
  <h2>Despliegue de aplicaciones web</h2>
 </body>
 </html>
