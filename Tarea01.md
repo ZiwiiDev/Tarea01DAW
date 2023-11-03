@@ -1,3 +1,5 @@
+AL ACABAR LA TAREA RENOMBRAR LAS IMÁGENES DEPENDIENDO DEL APARTADO
+
 # Tarea 01 · Despliegue de Aplicaciones Web
 ___
 ## Oliver Fabian Stetcu Stepanov
@@ -138,13 +140,6 @@ Añade la regla en el cortafuegos para ``ssh``.
 
 >Recuerda usar systemctl.
 
-Iniciamos nuestro Servidor y ejecutamos los siguientes comandos para instalar nuestro servidor Apache:
-
-```bash
-sudo apt update
-sudo apt install apache2
-```
-
 Y para instalar el SSH:
 
 ```bash
@@ -155,7 +150,6 @@ Comprobamos que tenemos Apache instalado y SSH (nos aparece la lista por lo tant
 
 ```bash
 sudo ufw app list
-sudo ufw allow Apache
 sudo ufw allow ssh
 ```
 
@@ -183,6 +177,7 @@ Resultado:
 ![UFW Activo](./img/v22_vbx.png)    
 
 Comprobamos que el servicio de **ssh** está activo y en funcionamiento (nos aparece que está activo porque lo hemos instalado anteriormente con ```"sudo apt install openssh-server"```):
+
 ```bash
 systemctl status ssh
 ```
@@ -291,9 +286,151 @@ Nos desconectamos del **Servidor** con el siguiente comando:
 ```bash
 exit
 ```
+
 ![Nos salimos del Servidor](./img/v30_vbx.png)
 
 ### Conexión mediante claves asimétricas.
+Equipo **Casa**:
 
+Crea un par de claves con el protocolo ``ed25519`` y con el nombre ``claves_trabajo``.
+
+Exporta la clave al **Servidor**.
+
+Conéctate desde Casa a Servidor mediante la clave ``clave_trabajo``.
+
+Para comprobar que estás en el servidor, crea un archivo de texto llamado ``claves.txt``.
+
+Desconéctate del servidor.
+
+>Recuerda usar ssh-keygen y ssh-add-id.
+
+Para ello, vamos a nuestra MV de **Casa** y ejecutamos los siguientes comandos para generar una clave con el protocolo **ed25519** y de nombre **clave_trabajo**:
+
+```bash
+cd .ssh
+ssh-keygen -t ed25519
+ls -la
+```
+
+![Generar clave con protocolo ed25519 con nombre "clave_trabajo"](./img/v31_vbx.png)
+
+Ahora vamos a exportar la clave a nuestro **Servidor** con el siguiente comando:
+
+```bash
+ssh-copy-id -i clave_trabajo.pub -p 22 sergio@10.0.2.8
+```
+
+![Exportar la clave pública al Servidor](./img/v32_vbx.png)
+
+Nos conectamos desde **Casa** al **Servidor** mediante la clave **clave_trabajo** con el siguiente comando:
+
+```bash
+ssh -p 22 -i clave_trabajo sergio@10.0.2.8
+```
+
+![Conectar desde Casa a Servidor mediante la clave "clave_trabajo"](./img/v33_vbx.png)
+
+Comprobamos que estamos en el Servidor creando un archivo de texto llamado **claves.txt**:
+
+```bash
+touch claves.txt
+ls -la
+```
+
+![Comprobar que estamos en el Servidor creando un .txt](./img/v34_vbx.png)
+
+Nos desconectamos del **Servidor** con el siguiente comando:
+
+```bash
+exit
+```
+
+![Nos salimos del Servidor](./img/v35_vbx.png)
+
+### Apache
+Equipo **Casa**:
+
+Conéctate desde **Casa** a **Servidor** mediante la clave ``clave_trabajo``.
+
+Instala en el equipo **Servidor** el servicio ``apache2``.
+
+Comprueba que el servicio ``apache2`` está activo y en funcionamiento.
+
+Añade la regla en el cortafuegos para ``apache2``.
+
+Añade en VirtualBox el redireccionamiento de puertos para poder acceder desde el **equipo anfitrión** al **Servidor** con el servicio ``apache2``.
+
+Nos conectamos desde **Casa** al **Servidor** mediante la clave **clave_trabajo** con el siguiente comando:
+
+```bash
+ssh -p 22 -i clave_trabajo sergio@10.0.2.8
+```
+
+![Conectar desde Casa a Servidor mediante la clave "clave_trabajo"](./img/v33_vbx.png)
+
+Para instalar en el **Servidor** el servicio **apache2** utilizamos el siguiente comando:
+
+```bash
+sudo apt update
+sudo apt install apache2
+```
+
+![Instalar Apache](./img/v36_vbx.png)
+
+Comprobamos que el servicio de **apache2** está activo y en funcionamiento ejecutamos el siguiente comando y añadimos la regla en el cortafuegos para **Apache**:
+
+```bash
+systemctl status apache2
+```
+
+Resultado:
+
+![Apache Activo](./img/v37_vbx.png)
+
+```bash
+sudo ufw app list
+sudo ufw allow Apache
+```
+
+![Apache Activo](./img/v38_vbx.png)
+
+Ahora cerramos nuestro servidor y vamos al VirtualBox. Vamos a Herramientas > Menú Desplegable > Red > Reenvío de Puertos. Estamos en el mismo sitio donde hemos creado la Red NAT.
+Aquí le damos a **"Crear"** y creamos el reenvío de puertos para Apache y SSH. Para ello insertamos los siguientes datos (nombre, protocolo, IP anfitrión, puerto anfitrión, IP invitado y puerto invitado):
+
+En nombre le asignamos el nombre, protocolo es el mismo en los dos, el IP anfitrión sería el localhost de nuestro pc, el puerto anfitrión de Apache es 8080 (si tenemos otro servidor le asignamos el 8081 por ejemplo) y para el SSH el puerto es el 2200 (le asignamos 2208 para referenciar nuestra MV), la IP invitado es la IP que tiene nuestra MV y el puerto invitado Apache tiene el 80 y SSH tiene el 22.
+
+Le damos a **"Aplicar"**.
+
+![Reenvío de puertos con Servidor](./img/v11_vbx.png)
+
+### SCP
+Equipo **Casa**:
+
+Crea en el equipo **Casa** una página web ``index.html`` como la siguiente con tu **nombre y apellidos**.
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Mi primer Servidor Apache</title>
+</head>
+<body>
+ <h1>Mi primer Servidor Apache</h1>
+ <h2>NOMBRE Y APELLIDOS</h2>
+ <h2>Despliegue de aplicaciones web</h2>
+</body>
+</html>
+```
+
+Copia el archivo anterior en **Servidor**, en la carpeta ``/var/www/html``.
+
+Equipo **Anfitrión**:
+
+Desde el **equipo anfitrión** abre un navegador web y prueba que puedes acceder a la web.
+
+COPIAR DESDE CASA AL SERVIDOR A /home/sergio NOS CAMBIAMOS DE USUARIO Y PONEMOS
+sudo su Y HACEMOS EL COPY DE LA CARPETA DE /home/sergio Y AHÍ NOS CAMBIAMOS A /var/www/html Y ASÍ TIENE PERMISOS DE ROOT
 
 
