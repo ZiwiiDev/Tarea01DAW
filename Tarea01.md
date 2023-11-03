@@ -47,11 +47,11 @@ Iniciamos la **MV del Servidor**. Seleccionamos el idioma a **español**, le dam
 
 Saltamos el **proxy** y va a realizar test para comprobar si hay errores. Le damos a **"Hecho"** hasta que nos pida insertar los datos de nuestro **perfil** y **servidor**. Le insertamos **"sergio"** en todos los campos. Y le damos a **"Hecho"** hasta que se inicie el Servidor.
 
-![Iniciar Servidor](./img/v07_vbx.png)
+![Insertar campos del Servidor](./img/v07_vbx.png)
 
 Iniciamos sesión con el nombre y contraseña del Servidor, **"sergio"** en ambas.
 
-![Iniciar Servidor](./img/v08_vbx.png)
+![Servidor Iniciado](./img/v08_vbx.png)
 
 Ya tendríamos iniciado nuestro Servidor. Ahora ejecutamos los siguientes comandos:
 
@@ -61,27 +61,7 @@ ip a
 ```
 Resultado:
 
-![Iniciar Servidor](./img/v09_vbx.png)
-
-Ejecutamos los siguientes comandos para instalar nuestro servidor Apache:
-
-```bash
-sudo apt update
-sudo apt install apache2
-sudo ufw app list
-sudo ufw allow Apache
-```
-
-Y para el SSH:
-
-```bash
-sudo apt install openssh-server
-systemctl status ssh
-```
-
-Comprobamos que tenemos Apache instalado y SSH:
-
-![Iniciar Servidor](./img/v10_vbx.png)
+![IP del Servidor](./img/v09_vbx.png)
 
 Ahora cerramos nuestro servidor y vamos al VirtualBox. Vamos a Herramientas > Menú Desplegable > Red > Reenvío de Puertos. Estamos en el mismo sitio donde hemos creado la Red NAT.
 Aquí le damos a **"Crear"** y creamos el reenvío de puertos para Apache y SSH. Para ello insertamos los siguientes datos (nombre, protocolo, IP anfitrión, puerto anfitrión, IP invitado y puerto invitado):
@@ -90,7 +70,7 @@ En nombre le asignamos el nombre, protocolo es el mismo en los dos, el IP anfitr
 
 Le damos a **"Aplicar"**.
 
-![Iniciar Servidor](./img/v11_vbx.png)
+![Reenvío de puertos con Servidor](./img/v11_vbx.png)
 
 Para comprobar que tenemos activo el Apache ejecutamos el comando siguiente (debe salir ``active``):
 
@@ -102,31 +82,21 @@ Podemos comprobar que funciona ejecutando en el navegador de nuestro pc lo sigui
 
 Nos saldrá esto:
 
-![Iniciar Servidor](./img/v12_vbx.png)
-
-Comprobamos que es accesible mediante **SSH** desde el anfitrión. Para ello, vamos a nuestro equipo y abrimos **cmd** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando:
-
-```bash
-ssh sergio@127.0.0.1 -p 2208
-```
-
-Podemos comprobar que es accesible mediante **SSH** desde el anfitrión:
-
-![Iniciar Servidor](./img/v13_vbx.png)
+![Comprobar que funciona el Servidor](./img/v12_vbx.png)
 
 Ahora vamos a instalar nuestro **Lubuntu**. Para ello, vamos al **VirtualBox** y le damos a **"Nueva"**, de nombre le ponemos **"Casa"**, seleccionamos la **.iso** de **Lubuntu** y le damos a **"Next"**, asignamos **2GB de RAM**, asignamos **10GB de memoria**. Ahora le asignamos a la MV resultante la **Red NAT** (debe ser la misma que tiene el **Servidor**), le asignamos **"RedNAT_Despliegue"**.
 
 Lo ejecutamos, instalamos el sistema operativo. Le indicamos el lenguaje a **español**, borramos el **disco duro** con swap, insertamos todos los datos en los campos que nos piden con los requisitos de la actividad (**"carmen"** en todo):
 
-![Iniciar Servidor](./img/v14_vbx.png)
+![Rellenar campos de Casa](./img/v14_vbx.png)
 
 Lo instalamos.
 
-![Iniciar Servidor](./img/v15_vbx.png)
+![Instalación de Lubuntu](./img/v15_vbx.png)
 
 Ejecutamos el terminal y comprobamos que está correcto:
 
-![Iniciar Servidor](./img/v16_vbx.png)
+![Funcionamiento correcto de Casa](./img/v16_vbx.png)
 
 Comprobamos que podemos conectar con google.es mediante el siguiente comando:
 
@@ -134,7 +104,7 @@ Comprobamos que podemos conectar con google.es mediante el siguiente comando:
 wget google.es
 ```
 
-![Iniciar Servidor](./img/v17_vbx.png)
+![Conexión a internet con éxito](./img/v17_vbx.png)
 
 Ahora lo cerramos y vamos al VirtualBox. Vamos a Herramientas > Menú Desplegable > Red > Reenvío de Puertos. Estamos en el mismo sitio donde hemos creado la Red NAT.
 Aquí le damos a **"Crear"** y creamos el reenvío de puertos para Apache y SSH. Para ello insertamos los siguientes datos (nombre, protocolo, IP anfitrión, puerto anfitrión, IP invitado y puerto invitado):
@@ -143,7 +113,7 @@ En nombre le asignamos el nombre, protocolo es el mismo en los dos, el IP anfitr
 
 Le damos a **"Aplicar"**.
 
-![Iniciar Servidor](./img/v18_vbx.png)
+![Reenvío de puertos con Casa](./img/v18_vbx.png)
 
 Instalamos el **SSH** con:
 
@@ -152,13 +122,178 @@ sudo apt install openssh-server
 systemctl status ssh
 ```
 
-![Iniciar Servidor](./img/v19_vbx.png)
+![Estado del SSH](./img/v19_vbx.png)
 
-Comprobamos si es accesible con SSH desde el equipo anfitrión. Para ello, vamos a nuestro equipo y abrimos **cmd** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando:
+# Linux Shell
+___
+Equipo **Servidor**:
+
+Instala o comprueba que ya estén instalados los servicios: ``openssh-server`` y ``ufw``.
+
+Comprueba que el servicio ``ufw`` está activo y en funcionamiento.
+
+Comprueba que el servicio ``ssh`` está activo y en funcionamiento.
+
+Añade la regla en el cortafuegos para ``ssh``.
+
+>Recuerda usar systemctl.
+
+Iniciamos nuestro Servidor y ejecutamos los siguientes comandos para instalar nuestro servidor Apache:
 
 ```bash
-ssh carmen@10.0.2.9 -p 2209
+sudo apt update
+sudo apt install apache2
+```
+
+Y para instalar el SSH:
+
+```bash
+sudo apt install openssh-server
+```
+
+Comprobamos que tenemos Apache instalado y SSH (nos aparece la lista por lo tanto **ufw** está instalado) y añadimos la regla en el cortafuegos para **SSH**:
+
+```bash
+sudo ufw app list
+sudo ufw allow Apache
+sudo ufw allow ssh
 ```
 
 Resultado:
+
+![Iniciar Servidor](./img/v10_vbx.png)
+
+Ahora vamos a comprobar que el servicio **ufw** está activo y en funcionamiento. Para ello ejecutamos lo siguiente:
+
+```bash
+sudo ufw status
+```
+
+Nos sale que está inactivo. Lo activamos con el siguiente comando:
+
+```bash
+sudo ufw enable
+sudo ufw status
+```
+
+Resultado:
+
+![UFW Inactivo](./img/v21_vbx.png)
+
+![UFW Activo](./img/v22_vbx.png)    
+
+Comprobamos que el servicio de **ssh** está activo y en funcionamiento (nos aparece que está activo porque lo hemos instalado anteriormente con ```"sudo apt install openssh-server"```):
+```bash
+systemctl status ssh
+```
+
+Resultado:
+
+![SSH Activo](./img/v20_vbx.png)
+
+# SSH
+___
+## Conexión mediante usuario y contraseña
+### Equipo **Anfitrión**:
+
+Conéctate desde el **equipo anfitrión** a **Servidor**.
+
+Para comprobar que estás en el servidor, crea un archivo de texto llamado ``servidor.txt``.
+
+Desconéctate del servidor.
+
+Conéctate desde el **equipo anfitrión** a **Casa**.
+
+Para comprobar que estás en el servidor, crea un archivo de texto llamado ``casa.txt``.
+
+Desconéctate de casa.
+
+### Equipo **Casa**:
+
+Conéctate desde **Casa** a **Servidor**.
+
+Para comprobar que estás en el servidor, crea un archivo de texto llamado ``casa.txt``.
+
+Desconéctate del servidor.
+
+Comprobamos que **Servidor** es accesible mediante **SSH** desde el anfitrión. Para ello, vamos a nuestro equipo y abrimos **"cmd"** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando:
+
+```bash
+ssh sergio@127.0.0.1 -p 2208
+```
+
+Nos pide la contraseña y podemos comprobar que es accesible mediante **SSH** desde el anfitrión y nos podemos conectar al **Servidor** correctamente:
+
+![Acceso mediante SSH desde el anfitrión al Servidor](./img/v13_vbx.png)
+
+Ahora ejecutamos los siguientes comandos para comprobar que estoy conectado:
+
+```bash
+touch servidor.txt
+ls
+```
+
+![Crear archivo de texto "servidor.txt"](./img/v23_vbx.png)
+
+Nos desconectamos del **Servidor** con el siguiente comando:
+
+```bash
+exit
+```
+
+![Desconectar del Servidor"](./img/v24_vbx.png)
+
+Comprobamos que **Casa** es accesible mediante **SSH** desde el equipo anfitrión. Para ello, vamos a nuestro equipo y abrimos **cmd** (en mi caso porque estoy en Windows). Aquí ponemos el siguiente comando:
+
+```bash
+ssh carmen@localhost -p 2209
+```
+
+Resultado:
+
+!["Acceso mediante SSH desde el anfitrión al Servidor"](./img/v25_vbx.png)
+
+Ahora ejecutamos los siguientes comandos para comprobar que estoy conectado:
+
+```bash
+touch casa.txt
+ls
+```
+
+![Crear archivo de texto "casa.txt"](./img/v26_vbx.png)
+
+Nos desconectamos del **Casa** con el siguiente comando:
+
+```bash
+exit
+```
+
+![Desconectar del Casa](./img/v27_vbx.png)
+
+Ahora nos dirigimos a **Casa** y nos conectamos con **Servidor** mediante el siguiente comando:
+
+```bash
+ssh sergio@10.0.2.8
+```
+
+![Conexión de Casa a Servidor](./img/v28_vbx.png)
+
+Ahora ejecutamos los siguientes comandos para comprobar que estoy conectado:
+
+```bash
+touch casa.txt
+ls
+```
+![Crear archivo de texto "casa.txt" en Casa](./img/v29_vbx.png)
+
+Nos desconectamos del **Servidor** con el siguiente comando:
+
+```bash
+exit
+```
+![Nos salimos del Servidor](./img/v30_vbx.png)
+
+### Conexión mediante claves asimétricas.
+
+
 
