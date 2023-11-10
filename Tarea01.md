@@ -478,7 +478,7 @@ sudo su
 Para acceder como superusuario para tener permisos de root. Ahora, hacemos el copy del **index.html** de ``/home/sergio`` a ``/var/www/html``:
 
 ```bash
-sudo cp index.html /var/www/html
+sudo scp index.html /var/www/html
 ```
 
 ![HTML copiado en /var/www/html](./img/v03_SCP.png)
