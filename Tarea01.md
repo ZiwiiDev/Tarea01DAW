@@ -1,5 +1,3 @@
-AL ACABAR LA TAREA RENOMBRAR LAS IMÁGENES DEPENDIENDO DEL APARTADO
-
 # Tarea 01 · Despliegue de Aplicaciones Web
 ___
 ## Oliver Fabian Stetcu Stepanov
