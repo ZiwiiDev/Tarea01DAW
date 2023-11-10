@@ -483,8 +483,12 @@ sudo cp index.html /var/www/html
 
 ![HTML copiado en /var/www/html](./img/v03_SCP.png)
 
-Y por último, desde nuestro **equipo anfitrión** comprobamos que podemos acceder a la web:
+Comprobamos que podemos acceder a la web desde **Casa** con ``10.0.2.8``:
 
-![Comprobar que podemos acceder a la web](./img/v04_SCP.png)
+![Comprobar que podemos acceder a la web desde Casa](./img/v04_SCP.png)
+
+Y por último, desde nuestro **equipo anfitrión** comprobamos que podemos acceder a la web con ``localhost:8080``:
+
+![Comprobar que podemos acceder a la web desde el equipo anfitrión](./img/v05_SCP.png)
 
 ## Oliver Fabian Stetcu Stepanov
