@@ -491,4 +491,4 @@ Y por último, desde nuestro **equipo anfitrión** comprobamos que podemos acced
 
 ![Comprobar que podemos acceder a la web desde el equipo anfitrión](./img/v05_SCP.png)
 
-## Oliver Fabian Stetcu Stepanov
+## Oliver Fabian Stetcu Stepanov 
